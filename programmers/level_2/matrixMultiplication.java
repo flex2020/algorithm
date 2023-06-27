@@ -1,3 +1,4 @@
+// 행렬의 곱셈
 class Solution {
     public int[][] solution(int[][] arr1, int[][] arr2) {
         int n = arr1.length;
@@ -10,7 +11,6 @@ class Solution {
                 }
             }
         }
-        
         return answer;
     }
 }
