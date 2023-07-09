@@ -1,31 +1,40 @@
-/**
- * 테스트 케이스 9, 10, 11 런타임 오류로 실패한 풀이
- */
+import java.util.*;
 class Solution {
     public static int MAX = 1000000 + 1;
     public int[] dp;
     
-    public int convert(int x, int y, int n, int count) {
-        // 기존 연산 값이 있다면 MAX 반환
-        if (dp[x] != 0 && dp[x] <= count) {
-            return MAX;
-        }
-        dp[x] = count;
-        if (x == y) {
-            return count;
-        }
-        int v1 = MAX, v2 = MAX, v3 = MAX;
-        if (x + n <= y) v1 = convert(x + n, y, n, count+1);
-        if (x * 2 <= y) v2 = convert(x * 2, y, n, count+1);
-        if (x * 3 <= y) v3 = convert(x * 3, y, n, count+1);
-        
-        return Math.min(v1, Math.min(v2, v3));
-    }
-    
     public int solution(int x, int y, int n) {
         dp = new int[MAX];
-        int answer = convert(x, y, n, 0);
-
-        return (answer >= MAX) ? -1 : answer;
+        Arrays.fill(dp, -1);
+        dp[x] = 0;
+        // i = 현재의 x
+        for (int i=x; i<=y; i++) {
+            // 만약 기존에 연산한 dp 값이 있다면
+            if (dp[i] != -1) {
+                // (현재의 x) + n 으로 변환한 적이 없다면
+                if (i + n <= y) {
+                    if (dp[i+n] == -1) {
+                        dp[i+n] = dp[i] + 1; // 연산횟수 추가
+                    } else {
+                        dp[i+n] = Math.min(dp[i] + 1, dp[i+n]);
+                    }
+                }
+                if (i * 2 <= y) {
+                    if (dp[i*2] == -1) {
+                        dp[i*2] = dp[i] + 1;  
+                    } else {
+                        dp[i*2] = Math.min(dp[i] + 1, dp[i*2]);
+                    }
+                } 
+                if (i * 3 <= y) {
+                    if (dp[i*3] == -1) {
+                        dp[i*3] = dp[i] + 1;  
+                    } else {
+                        dp[i*3] = Math.min(dp[i] + 1, dp[i*3]);
+                    }
+                }
+            }
+        }
+        return dp[y];
     }
 }
