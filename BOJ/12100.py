@@ -17,90 +17,79 @@ def solve(depth, board):
   dir = ['L', 'R', 'U', 'D']
   for d in dir:
     # 각 방향으로 보드를 이동 후 보드를 얻음
-    new_board = move(d, board)
+    new_board = move(d, copy.deepcopy(board))
     # 다음 단계 진행
     solve(depth + 1, new_board)
 
 def move(d, board):
-  new_board = copy.deepcopy(board)
-  pull_board(new_board, d)
   if d == 'L':
     for i in range(N):
-      for j in range(N-1):
-        # 같은 숫자 두개면
-        if new_board[i][j] == new_board[i][j+1]:
-          new_board[i][j] = new_board[i][j] * 2
-          new_board[i][j+1] = 0
+      top = 0
+      for j in range(1, N):
+        if board[i][j]:
+          tmp = board[i][j]
+          board[i][j] = 0
+          if board[i][top] == 0:
+            board[i][top] = tmp
+          elif board[i][top] == tmp:
+            board[i][top] = tmp * 2
+            top += 1
+          else:
+            top += 1
+            board[i][top] = tmp
   elif d == 'R':
     for i in range(N):
-      for j in range(N-1, 0, -1):
-        # 같은 숫자 두개면
-        if new_board[i][j] == new_board[i][j-1]:
-          new_board[i][j] = new_board[i][j] * 2
-          new_board[i][j-1] = 0
+      top = N - 1
+      for j in range(N - 2, -1, -1):
+        if board[i][j]:
+          tmp = board[i][j]
+          board[i][j] = 0
+          if board[i][top] == 0:
+            board[i][top] = tmp
+          elif board[i][top] == tmp:
+            board[i][top] = tmp * 2
+            top -= 1
+          else:
+            top -= 1
+            board[i][top] = tmp
   elif d == 'U':
     for j in range(N):
-      for i in range(N-1):
-        if new_board[i][j] == new_board[i+1][j]:
-          new_board[i][j] = new_board[i][j] * 2
-          new_board[i+1][j] = 0
+      top = 0
+      for i in range(N):
+        if board[i][j]:
+          tmp = board[i][j]
+          board[i][j] = 0
+          if board[top][j] == 0:
+            board[top][j] = tmp
+          elif board[top][j] == tmp:
+            board[top][j] = tmp * 2
+            top += 1
+          else:
+            top += 1
+            board[top][j] = tmp
   elif d == 'D':
     for j in range(N):
-      for i in range(N-1, 0, -1):
-        if new_board[i][j] == new_board[i-1][j]:
-          new_board[i][j] = new_board[i][j] * 2
-          new_board[i-1][j] = 0
+      top = N - 1
+      for i in range(N-2, -1, -1):
+        if board[i][j]:
+          tmp = board[i][j]
+          board[i][j] = 0
+          if board[top][j] == 0:
+            board[top][j] = tmp
+          elif board[top][j] == tmp:
+            board[top][j] = tmp * 2
+            top -= 1
+          else:
+            top -= 1
+            board[top][j] = tmp
+  return board
 
-  pull_board(new_board, d)
-  return new_board
-
-def check_board(board, new_board):
-  for i in range(N):
-    for j in range(N):
-      if board[i][j] != new_board[i][j]:
-        return True
-  return False
-
-def pull_board(new_board, d):
-  if d == 'L':  
-    for i in range(N):
-      for j in range(N-1, 0, -1):
-        if new_board[i][j] != 0 and new_board[i][j-1] == 0:
-          new_board[i][j], new_board[i][j-1] = new_board[i][j-1], new_board[i][j]
-  elif d == 'R':
-    for i in range(N):
-      for j in range(N-1):
-        if new_board[i][j] != 0 and new_board[i][j+1] == 0:
-          new_board[i][j], new_board[i][j+1] = new_board[i][j+1], new_board[i][j]
-  elif d == 'U':
-    for j in range(N):
-      for i in range(N-1, 0, -1):
-        if new_board[i][j] != 0 and new_board[i-1][j] == 0:
-          new_board[i][j], new_board[i-1][j] = new_board[i-1][j], new_board[i][j]
-  elif d == 'D':
-    for j in range(N):
-      for i in range(N-1):
-        if new_board[i][j] != 0 and new_board[i+1][j] == 0:
-          new_board[i][j], new_board[i+1][j] = new_board[i+1][j], new_board[i][j]
-def display(board):
-  print("===============================")
-  for i in range(N):
-    for j in range(N):
-      print(board[i][j], end = ' ')
-    print()
 
 N = int(input())
 input_board = []
 for i in range(N):
   input_board.append(list(map(int, input().split())))
 answer = 0
-
-# board = move('R', input_board)
-
-# for _ in range(3):
-#   board = move('R', board)
-
-# board = move('U', board)
 
 solve(0, input_board)
 
