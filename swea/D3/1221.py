@@ -29,11 +29,11 @@ for tc in range(1, T + 1):
   N = input().split()[1]
   data = list(input().split())
   answer = ''
-  number_data = []
+  counting = [0] * 10 # 숫자가 9까지 있으니 크기를 10으로 지정
   for i in range(len(data)):
-    number_data.append(eng_to_number[data[i]])
-  number_data.sort()
+    counting[eng_to_number[data[i]]] += 1
+  
+  for i in range(10):
+    answer += (number_to_eng[i] + ' ') * counting[i]
 
-  for n in number_data:
-    answer += number_to_eng[n] + ' '
   print(f"#{tc} {answer}")
